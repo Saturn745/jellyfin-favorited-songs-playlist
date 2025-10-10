@@ -1,16 +1,16 @@
 ---
-name: "Template"
-guid: "eb5d7894-8eef-4b36-aa6f-5d124e828ce1"
+name: "Favorited Songs Playlist"
+guid: "faebdd17-c407-4d0e-9b27-0cda823d702a"
 version: "1.0.0.0"
 targetAbi: "10.9.0.0"
 framework: "net8.0"
-overview: "Short description about your plugin"
+overview: "Automatically creates and updates a 'Favorited Songs'"
 description: >
-  This is a longer description that can span more than one
-  line and include details about your plugin.
+   Automatically creates and updates a “Favorited Songs” playlist in Jellyfin containing all your favorited music tracks. The playlist syncs whenever you favorite or unfavorite a song, making it easy to play your favorited
+   without manual management.
 category: "General"
 owner: "jellyfin"
 artifacts:
-- "Jellyfin.Plugin.Template.dll"
+- "Jellyfin.Plugin.FavoritedSongsPlaylist.dll"
 changelog: >
   changelog

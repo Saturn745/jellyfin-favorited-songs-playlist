@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Favorited Songs Playlist</title>
+</head>
+<body>
+<div id="FavoritedSongsConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button">
+    <div data-role="content">
+        <div class="content-primary">
+            <form id="FavoritedSongsConfigForm">
+                <div class="inputContainer">
+                    <label class="inputLabel inputLabelUnfocused" for="PlaylistName">Playlist Name</label>
+                    <input id="PlaylistName" name="PlaylistName" type="text" is="emby-input" />
+                </div>
+                <div>
+                    <button is="emby-button" type="submit" class="raised button-submit block emby-button">
+                        <span>Save</span>
+                    </button>
+                </div>
+                <div>
+                    <button is="emby-button" type="button" id="SyncButton" class="raised button-secondary block emby-button">
+                        <span>Force Sync for All Users</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var FavoritedSongsConfig = {
+            pluginUniqueId: 'faebdd17-c407-4d0e-9b27-0cda823d702a'
+        };
+
+        document.querySelector('#FavoritedSongsConfigPage')
+            .addEventListener('pageshow', function() {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(FavoritedSongsConfig.pluginUniqueId).then(function (config) {
+                    document.querySelector('#PlaylistName').value = config.PlaylistName || 'Favorited Songs';
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+        document.querySelector('#FavoritedSongsConfigForm')
+            .addEventListener('submit', function(e) {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(FavoritedSongsConfig.pluginUniqueId).then(function (config) {
+                    config.PlaylistName = document.querySelector('#PlaylistName').value;
+                    ApiClient.updatePluginConfiguration(FavoritedSongsConfig.pluginUniqueId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    });
+                });
+
+                e.preventDefault();
+                return false;
+            });
+
+        document.querySelector('#SyncButton')
+            .addEventListener('click', function() {
+                Dashboard.showLoadingMsg();
+                ApiClient.ajax({
+                    type: 'POST',
+                    url: ApiClient.getUrl('Plugins/FavoritedSongsPlaylist/SyncNow'),
+                    dataType: 'json'
+                }).then(function (result) {
+                    Dashboard.hideLoadingMsg();
+                    Dashboard.alert('Sync started for all users');
+                }).catch(function (error) {
+                    Dashboard.hideLoadingMsg();
+                    Dashboard.alert('Error: ' + (error.statusText || 'Unknown error'));
+                });
+            });
+    </script>
+</div>
+</body>
+</html>
