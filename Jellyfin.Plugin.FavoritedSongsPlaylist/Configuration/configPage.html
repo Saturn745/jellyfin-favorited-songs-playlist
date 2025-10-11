@@ -12,6 +12,10 @@
                 <div class="inputContainer">
                     <label class="inputLabel inputLabelUnfocused" for="PlaylistName">Playlist Name</label>
                     <input id="PlaylistName" name="PlaylistName" type="text" is="emby-input" />
+                    <div class="fieldDescription">The playlist name template. Use <strong>{username}</strong> as a placeholder for the username. Example: "{username}'s Favorited Songs"</div>
+                </div>
+                <div id="PlaylistNameError" class="fieldDescription" style="color: #ff6b6b; display: none;">
+                    Error: Playlist name must contain the {username} placeholder.
                 </div>
                 <div>
                     <button is="emby-button" type="submit" class="raised button-submit block emby-button">
@@ -31,26 +35,40 @@
             pluginUniqueId: 'faebdd17-c407-4d0e-9b27-0cda823d702a'
         };
 
+        function validatePlaylistName(name) {
+            return name.includes('{username}');
+        }
+
         document.querySelector('#FavoritedSongsConfigPage')
             .addEventListener('pageshow', function() {
                 Dashboard.showLoadingMsg();
                 ApiClient.getPluginConfiguration(FavoritedSongsConfig.pluginUniqueId).then(function (config) {
-                    document.querySelector('#PlaylistName').value = config.PlaylistName || 'Favorited Songs';
+                    document.querySelector('#PlaylistName').value = config.PlaylistName || "{username}'s Favorited Songs";
                     Dashboard.hideLoadingMsg();
                 });
             });
 
         document.querySelector('#FavoritedSongsConfigForm')
             .addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                var playlistName = document.querySelector('#PlaylistName').value;
+                var errorDiv = document.querySelector('#PlaylistNameError');
+
+                if (!validatePlaylistName(playlistName)) {
+                    errorDiv.style.display = 'block';
+                    return false;
+                }
+
+                errorDiv.style.display = 'none';
                 Dashboard.showLoadingMsg();
                 ApiClient.getPluginConfiguration(FavoritedSongsConfig.pluginUniqueId).then(function (config) {
-                    config.PlaylistName = document.querySelector('#PlaylistName').value;
+                    config.PlaylistName = playlistName;
                     ApiClient.updatePluginConfiguration(FavoritedSongsConfig.pluginUniqueId, config).then(function (result) {
                         Dashboard.processPluginConfigurationUpdateResult(result);
                     });
                 });
 
-                e.preventDefault();
                 return false;
             });
 

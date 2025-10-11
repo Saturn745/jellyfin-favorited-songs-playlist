@@ -37,8 +37,6 @@ public class FavoritedSongsPlaylistEventListener : IHostedService
 
     private async void UserDataSavedHandler(object? sender, UserDataSaveEventArgs eventArgs)
     {
-        var config = Plugin.Instance?.Configuration;
-        if (config == null) return;
         if (eventArgs.Item is null) return;
         if (eventArgs.Item is not Audio) return;
         if (eventArgs.SaveReason != UserDataSaveReason.UpdateUserRating) return;
@@ -51,7 +49,7 @@ public class FavoritedSongsPlaylistEventListener : IHostedService
 
         _logger.LogInformation("User '{UserId}' marked item '{ItemId}' as favorite.", user.Id, eventArgs.Item.Id);
 
-        await _playlistService.CreateFavoritedSongsPlaylistAsync(user, config.PlaylistName);
+        await _playlistService.CreateFavoritedSongsPlaylistAsync(user);
     }
 
     public Task StartAsync(CancellationToken cancellationToken)

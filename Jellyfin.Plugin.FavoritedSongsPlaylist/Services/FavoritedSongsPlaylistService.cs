@@ -45,8 +45,16 @@ public class FavoritedSongsPlaylistService
     /// <param name="user">The user to create the playlist for.</param>
     /// <param name="playlistName">The name of the playlist to create.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task CreateFavoritedSongsPlaylistAsync(User user, string playlistName)
+    public async Task CreateFavoritedSongsPlaylistAsync(User user)
     {
+        var config = Plugin.Instance?.Configuration;
+        if (config == null)
+        {
+            throw new InvalidOperationException("Plugin configuration not found");
+        }
+
+        var playlistName = config.PlaylistName.Replace("{username}", char.ToUpper(user.Username[0]) + user.Username.Substring(1));
+
         try
         {
             ArgumentNullException.ThrowIfNull(user);
@@ -56,11 +64,8 @@ public class FavoritedSongsPlaylistService
                 throw new ArgumentException("Playlist name cannot be empty.", nameof(playlistName));
             }
 
-            var formattedPlaylistName =
-                $"{char.ToUpper(user.Username[0]) + user.Username.Substring(1)}'s {playlistName}";
-
             _logger.LogInformation("Creating favorited songs playlist '{PlaylistName}' for user '{UserId}'",
-                formattedPlaylistName, user.Id);
+                playlistName, user.Id);
 
             var favoritedSongs = GetUserFavoritedSongs(user);
 
@@ -73,19 +78,19 @@ public class FavoritedSongsPlaylistService
 
             _logger.LogInformation("Found {Count} favorited songs for user '{UserId}'", favoritedSongs.Count, user.Id);
 
-            var existingPlaylist = FindPlaylistByName(formattedPlaylistName, user);
+            var existingPlaylist = FindPlaylistByName(playlistName, user);
 
             if (existingPlaylist != null)
             {
                 _logger.LogInformation("Found existing playlist '{PlaylistName}'. Clearing and updating...",
-                    formattedPlaylistName);
+                    playlistName);
                 await UpdatePlaylistAsync(existingPlaylist, favoritedSongs, user);
             }
             else
             {
                 _logger.LogInformation("Creating new playlist '{PlaylistName}' for user '{UserId}'",
-                    formattedPlaylistName, user.Id);
-                await CreatePlaylistAsync(formattedPlaylistName, favoritedSongs, user);
+                    playlistName, user.Id);
+                await CreatePlaylistAsync(playlistName, favoritedSongs, user);
             }
 
             _logger.LogInformation("Successfully created/updated favorited songs playlist for user '{UserId}'",
@@ -158,7 +163,7 @@ public class FavoritedSongsPlaylistService
     {
         var favoritedSongIds = songs.Select(s => s.Id).ToList();
 
-        _logger.LogDebug("Updating playlist {PlaylistId}. Target: {TargetCount} items", 
+        _logger.LogDebug("Updating playlist {PlaylistId}. Target: {TargetCount} items",
             playlist.Id, favoritedSongIds.Count);
 
         // Use UpdatePlaylist instead of manual add/remove

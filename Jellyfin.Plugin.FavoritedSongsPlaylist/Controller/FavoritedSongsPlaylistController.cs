@@ -46,13 +46,6 @@ public class FavoritedSongsPlaylistController : ControllerBase
     {
         try
         {
-            var config = Plugin.Instance?.Configuration;
-            if (config == null)
-            {
-                return BadRequest("Plugin configuration not found");
-            }
-
-            var playlistName = config.PlaylistName;
             var users = _userManager.Users.ToList();
 
             _logger.LogInformation("Starting forced sync for {UserCount} users", users.Count);
@@ -63,7 +56,7 @@ public class FavoritedSongsPlaylistController : ControllerBase
             {
                 try
                 {
-                    await _playlistService.CreateFavoritedSongsPlaylistAsync(user, playlistName).ConfigureAwait(false);
+                    await _playlistService.CreateFavoritedSongsPlaylistAsync(user).ConfigureAwait(false);
                 }
                 catch (System.Exception ex)
                 {

@@ -12,7 +12,7 @@ public class PluginConfiguration : BasePluginConfiguration
     /// </summary>
     public PluginConfiguration()
     {
-        this.PlaylistName = "Favorited Songs";
+        this.PlaylistName = "{username}'s: Favorited Songs";
     }
 
     /// <summary>

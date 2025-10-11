@@ -8,6 +8,14 @@
         "category": "General",
         "versions": [
             {
+                "changelog": "- Templated Playlist name support",
+                "targetAbi": "10.10.7.0",
+                "version": "1.0.0.1",
+                "sourceUrl": "https://github.com/Saturn745/jellyfin-favorited-songs-playlist/releases/download/1.0.0.1/Jellyfin.Plugin.FavoritedSongsPlaylist.zip",
+                "checksum": "0910cf5ee1b116a2b68263e2b441d4be",
+                "timestamp": "2025-10-10T06:16:18"
+            },
+            {
                 "changelog": "- Inital release",
                 "targetAbi": "10.10.7.0",
                 "version": "1.0.0.0",
