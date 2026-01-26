@@ -10,7 +10,7 @@
             {
                 "changelog": "- Add support for Jellyfin 10.11.6",
                 "targetAbi": "10.11.6.0",
-                "version": "1.0.0.2",
+                "version": "1.0.1.0",
                 "sourceUrl": "https://github.com/Saturn745/jellyfin-favorited-songs-playlist/releases/download/1.0.0.2/Jellyfin.Plugin.FavoritedSongsPlaylist.zip",
                 "checksum": "a94e11bde86f3098fac62b000923547b",
                 "timestamp": "2026-01-26T02:14:18"
