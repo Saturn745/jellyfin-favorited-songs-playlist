@@ -1,9 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
-using ICU4N.Impl;
-using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.FavoritedSongsPlaylist.Services;
-using MediaBrowser.Controller;
 using MediaBrowser.Controller.Entities.Audio;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Model.Entities;
