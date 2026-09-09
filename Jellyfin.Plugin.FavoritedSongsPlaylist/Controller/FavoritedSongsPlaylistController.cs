@@ -46,7 +46,7 @@ public class FavoritedSongsPlaylistController : ControllerBase
     {
         try
         {
-            var users = _userManager.Users.ToList();
+            var users = _userManager.GetUsers().ToList();
 
             _logger.LogInformation("Starting forced sync for {UserCount} users", users.Count);
 
